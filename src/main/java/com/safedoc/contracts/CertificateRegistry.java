@@ -1,0 +1,237 @@
+package com.safedoc.contracts;
+
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.Event;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.generated.Bytes32;
+import org.web3j.abi.datatypes.generated.Uint256;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.RemoteFunctionCall;
+import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.BaseEventResponse;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tuples.generated.Tuple6;
+import org.web3j.tx.Contract;
+import org.web3j.tx.TransactionManager;
+import org.web3j.tx.gas.ContractGasProvider;
+
+/**
+ * <p>Auto generated code.
+ * <p><strong>Do not modify!</strong>
+ * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ *
+ * <p>Generated with web3j version 4.5.16.
+ */
+@SuppressWarnings("rawtypes")
+public class CertificateRegistry extends Contract {
+    public static final String BINARY = "6080604052348015600e575f5ffd5b503360015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610f788061005c5f395ff3fe608060405234801561000f575f5ffd5b506004361061004a575f3560e01c8063850c17681461004e5780638da5cb5b14610083578063c6cbc52a146100a1578063dfd72020146100bd575b5f5ffd5b6100686004803603810190610063919061076b565b6100d9565b60405161007a96959493929190610838565b60405180910390f35b61008b610384565b60405161009891906108f2565b60405180910390f35b6100bb60048036038101906100b6919061076b565b6103a9565b005b6100d760048036038101906100d29190610a37565b610512565b005b60608060605f60605f5f5f5f8981526020019081526020015f206040518060a00160405290815f8201805461010d90610b4b565b80601f016020809104026020016040519081016040528092919081815260200182805461013990610b4b565b80156101845780601f1061015b57610100808354040283529160200191610184565b820191905f5260205f20905b81548152906001019060200180831161016757829003601f168201915b5050505050815260200160018201805461019d90610b4b565b80601f01602080910402602001604051908101604052809291908181526020018280546101c990610b4b565b80156102145780601f106101eb57610100808354040283529160200191610214565b820191905f5260205f20905b8154815290600101906020018083116101f757829003601f168201915b5050505050815260200160028201805461022d90610b4b565b80601f016020809104026020016040519081016040528092919081815260200182805461025990610b4b565b80156102a45780601f1061027b576101008083540402835291602001916102a4565b820191905f5260205f20905b81548152906001019060200180831161028757829003601f168201915b50505050508152602001600382015481526020016004820180546102c790610b4b565b80601f01602080910402602001604051908101604052809291908181526020018280546102f390610b4b565b801561033e5780601f106103155761010080835404028352916020019161033e565b820191905f5260205f20905b81548152906001019060200180831161032157829003601f168201915b50505050508152505090505f5f826060015114159050815f0151826020015183604001518460600151856080015185975097509750975097509750505091939550919395565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610438576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161042f90610bc5565b60405180910390fd5b5f5f5f8381526020019081526020015f20600301540361048d576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161048490610c2d565b60405180910390fd5b5f5f8281526020019081526020015f205f5f82015f6104ac91906106cf565b600182015f6104bb91906106cf565b600282015f6104ca91906106cf565b600382015f9055600482015f6104e091906106cf565b5050807f44d80a438cb4fa3b5aedbe551ce3d9382e37f446917b783e1dee70a03b4180e360405160405180910390a250565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146105a1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161059890610bc5565b60405180910390fd5b5f5f5f8781526020019081526020015f2060030154146105f6576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016105ed90610c95565b60405180910390fd5b6040518060a00160405280858152602001848152602001838152602001428152602001828152505f5f8781526020019081526020015f205f820151815f0190816106409190610e53565b5060208201518160010190816106569190610e53565b50604082015181600201908161066c9190610e53565b5060608201518160030155608082015181600401908161068c9190610e53565b50905050847faeb7e439524e4d35b43e6ccb53c42a2fe0361d2e96be31ebc6e2c3cb72aadb94826040516106c09190610f22565b60405180910390a25050505050565b5080546106db90610b4b565b5f825580601f106106ec5750610709565b601f0160209004905f5260205f2090810190610708919061070c565b5b50565b5b80821115610723575f815f90555060010161070d565b5090565b5f604051905090565b5f5ffd5b5f5ffd5b5f819050919050565b61074a81610738565b8114610754575f5ffd5b50565b5f8135905061076581610741565b92915050565b5f602082840312156107805761077f610730565b5b5f61078d84828501610757565b91505092915050565b5f81519050919050565b5f82825260208201905092915050565b8281835e5f83830152505050565b5f601f19601f8301169050919050565b5f6107d882610796565b6107e281856107a0565b93506107f28185602086016107b0565b6107fb816107be565b840191505092915050565b5f819050919050565b61081881610806565b82525050565b5f8115159050919050565b6108328161081e565b82525050565b5f60c0820190508181035f83015261085081896107ce565b9050818103602083015261086481886107ce565b9050818103604083015261087881876107ce565b9050610887606083018661080f565b818103608083015261089981856107ce565b90506108a860a0830184610829565b979650505050505050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6108dc826108b3565b9050919050565b6108ec816108d2565b82525050565b5f6020820190506109055f8301846108e3565b92915050565b5f5ffd5b5f5ffd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b610949826107be565b810181811067ffffffffffffffff8211171561096857610967610913565b5b80604052505050565b5f61097a610727565b90506109868282610940565b919050565b5f67ffffffffffffffff8211156109a5576109a4610913565b5b6109ae826107be565b9050602081019050919050565b828183375f83830152505050565b5f6109db6109d68461098b565b610971565b9050828152602081018484840111156109f7576109f661090f565b5b610a028482856109bb565b509392505050565b5f82601f830112610a1e57610a1d61090b565b5b8135610a2e8482602086016109c9565b91505092915050565b5f5f5f5f5f60a08688031215610a5057610a4f610730565b5b5f610a5d88828901610757565b955050602086013567ffffffffffffffff811115610a7e57610a7d610734565b5b610a8a88828901610a0a565b945050604086013567ffffffffffffffff811115610aab57610aaa610734565b5b610ab788828901610a0a565b935050606086013567ffffffffffffffff811115610ad857610ad7610734565b5b610ae488828901610a0a565b925050608086013567ffffffffffffffff811115610b0557610b04610734565b5b610b1188828901610a0a565b9150509295509295909350565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52602260045260245ffd5b5f6002820490506001821680610b6257607f821691505b602082108103610b7557610b74610b1e565b5b50919050565b7f4e6f7420617574686f72697a65640000000000000000000000000000000000005f82015250565b5f610baf600e836107a0565b9150610bba82610b7b565b602082019050919050565b5f6020820190508181035f830152610bdc81610ba3565b9050919050565b7f436572746966696361746520646f6573206e6f742065786973740000000000005f82015250565b5f610c17601a836107a0565b9150610c2282610be3565b602082019050919050565b5f6020820190508181035f830152610c4481610c0b565b9050919050565b7f436572746966696361746520616c7265616479206578697374730000000000005f82015250565b5f610c7f601a836107a0565b9150610c8a82610c4b565b602082019050919050565b5f6020820190508181035f830152610cac81610c73565b9050919050565b5f819050815f5260205f209050919050565b5f6020601f8301049050919050565b5f82821b905092915050565b5f60088302610d0f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82610cd4565b610d198683610cd4565b95508019841693508086168417925050509392505050565b5f819050919050565b5f610d54610d4f610d4a84610806565b610d31565b610806565b9050919050565b5f819050919050565b610d6d83610d3a565b610d81610d7982610d5b565b848454610ce0565b825550505050565b5f5f905090565b610d98610d89565b610da3818484610d64565b505050565b5b81811015610dc657610dbb5f82610d90565b600181019050610da9565b5050565b601f821115610e0b57610ddc81610cb3565b610de584610cc5565b81016020851015610df4578190505b610e08610e0085610cc5565b830182610da8565b50505b505050565b5f82821c905092915050565b5f610e2b5f1984600802610e10565b1980831691505092915050565b5f610e438383610e1c565b9150826002028217905092915050565b610e5c82610796565b67ffffffffffffffff811115610e7557610e74610913565b5b610e7f8254610b4b565b610e8a828285610dca565b5f60209050601f831160018114610ebb575f8415610ea9578287015190505b610eb38582610e38565b865550610f1a565b601f198416610ec986610cb3565b5f5b82811015610ef057848901518255600182019150602085019450602081019050610ecb565b86831015610f0d5784890151610f09601f891682610e1c565b8355505b6001600288020188555050505b505050505050565b5f6020820190508181035f830152610f3a81846107ce565b90509291505056fea26469706673582212207ed2846f6a459bef6e7c3a15c7e9c476d8d92689cec5a679dbb05904e6a95c6d64736f6c634300081e0033";
+
+    public static final String FUNC_ISSUECERTIFICATE = "issueCertificate";
+
+    public static final String FUNC_OWNER = "owner";
+
+    public static final String FUNC_REVOKECERTIFICATE = "revokeCertificate";
+
+    public static final String FUNC_VERIFYCERTIFICATE = "verifyCertificate";
+
+    public static final Event CERTIFICATEISSUED_EVENT = new Event("CertificateIssued", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>(true) {}, new TypeReference<Utf8String>() {}));
+    ;
+
+    public static final Event CERTIFICATEREVOKED_EVENT = new Event("CertificateRevoked", 
+            Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>(true) {}));
+    ;
+
+    @Deprecated
+    protected CertificateRegistry(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    protected CertificateRegistry(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
+    }
+
+    @Deprecated
+    protected CertificateRegistry(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+
+    protected CertificateRegistry(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public List<CertificateIssuedEventResponse> getCertificateIssuedEvents(TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(CERTIFICATEISSUED_EVENT, transactionReceipt);
+        ArrayList<CertificateIssuedEventResponse> responses = new ArrayList<CertificateIssuedEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            CertificateIssuedEventResponse typedResponse = new CertificateIssuedEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.certificateId = (byte[]) eventValues.getIndexedValues().get(0).getValue();
+            typedResponse.ipfsHash = (String) eventValues.getNonIndexedValues().get(0).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public Flowable<CertificateIssuedEventResponse> certificateIssuedEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(new Function<Log, CertificateIssuedEventResponse>() {
+            @Override
+            public CertificateIssuedEventResponse apply(Log log) {
+                Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(CERTIFICATEISSUED_EVENT, log);
+                CertificateIssuedEventResponse typedResponse = new CertificateIssuedEventResponse();
+                typedResponse.log = log;
+                typedResponse.certificateId = (byte[]) eventValues.getIndexedValues().get(0).getValue();
+                typedResponse.ipfsHash = (String) eventValues.getNonIndexedValues().get(0).getValue();
+                return typedResponse;
+            }
+        });
+    }
+
+    public Flowable<CertificateIssuedEventResponse> certificateIssuedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(CERTIFICATEISSUED_EVENT));
+        return certificateIssuedEventFlowable(filter);
+    }
+
+    public List<CertificateRevokedEventResponse> getCertificateRevokedEvents(TransactionReceipt transactionReceipt) {
+        List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(CERTIFICATEREVOKED_EVENT, transactionReceipt);
+        ArrayList<CertificateRevokedEventResponse> responses = new ArrayList<CertificateRevokedEventResponse>(valueList.size());
+        for (Contract.EventValuesWithLog eventValues : valueList) {
+            CertificateRevokedEventResponse typedResponse = new CertificateRevokedEventResponse();
+            typedResponse.log = eventValues.getLog();
+            typedResponse.certificateId = (byte[]) eventValues.getIndexedValues().get(0).getValue();
+            responses.add(typedResponse);
+        }
+        return responses;
+    }
+
+    public Flowable<CertificateRevokedEventResponse> certificateRevokedEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(new Function<Log, CertificateRevokedEventResponse>() {
+            @Override
+            public CertificateRevokedEventResponse apply(Log log) {
+                Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(CERTIFICATEREVOKED_EVENT, log);
+                CertificateRevokedEventResponse typedResponse = new CertificateRevokedEventResponse();
+                typedResponse.log = log;
+                typedResponse.certificateId = (byte[]) eventValues.getIndexedValues().get(0).getValue();
+                return typedResponse;
+            }
+        });
+    }
+
+    public Flowable<CertificateRevokedEventResponse> certificateRevokedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        filter.addSingleTopic(EventEncoder.encode(CERTIFICATEREVOKED_EVENT));
+        return certificateRevokedEventFlowable(filter);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> issueCertificate(byte[] certificateId, String recipientName, String courseName, String issuingOrganization, String ipfsHash) {
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
+                FUNC_ISSUECERTIFICATE, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(certificateId), 
+                new org.web3j.abi.datatypes.Utf8String(recipientName), 
+                new org.web3j.abi.datatypes.Utf8String(courseName), 
+                new org.web3j.abi.datatypes.Utf8String(issuingOrganization), 
+                new org.web3j.abi.datatypes.Utf8String(ipfsHash)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<String> owner() {
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_OWNER, 
+                Arrays.<Type>asList(), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteFunctionCall<TransactionReceipt> revokeCertificate(byte[] certificateId) {
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(
+                FUNC_REVOKECERTIFICATE, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(certificateId)), 
+                Collections.<TypeReference<?>>emptyList());
+        return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<Tuple6<String, String, String, BigInteger, String, Boolean>> verifyCertificate(byte[] certificateId) {
+        final org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(FUNC_VERIFYCERTIFICATE, 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Bytes32(certificateId)), 
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Bool>() {}));
+        return new RemoteFunctionCall<Tuple6<String, String, String, BigInteger, String, Boolean>>(function,
+                new Callable<Tuple6<String, String, String, BigInteger, String, Boolean>>() {
+                    @Override
+                    public Tuple6<String, String, String, BigInteger, String, Boolean> call() throws Exception {
+                        List<Type> results = executeCallMultipleValueReturn(function);
+                        return new Tuple6<String, String, String, BigInteger, String, Boolean>(
+                                (String) results.get(0).getValue(), 
+                                (String) results.get(1).getValue(), 
+                                (String) results.get(2).getValue(), 
+                                (BigInteger) results.get(3).getValue(), 
+                                (String) results.get(4).getValue(), 
+                                (Boolean) results.get(5).getValue());
+                    }
+                });
+    }
+
+    @Deprecated
+    public static CertificateRegistry load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return new CertificateRegistry(contractAddress, web3j, credentials, gasPrice, gasLimit);
+    }
+
+    @Deprecated
+    public static CertificateRegistry load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return new CertificateRegistry(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
+    }
+
+    public static CertificateRegistry load(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+        return new CertificateRegistry(contractAddress, web3j, credentials, contractGasProvider);
+    }
+
+    public static CertificateRegistry load(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        return new CertificateRegistry(contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public static RemoteCall<CertificateRegistry> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+        return deployRemoteCall(CertificateRegistry.class, web3j, credentials, contractGasProvider, BINARY, "");
+    }
+
+    public static RemoteCall<CertificateRegistry> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+        return deployRemoteCall(CertificateRegistry.class, web3j, transactionManager, contractGasProvider, BINARY, "");
+    }
+
+    @Deprecated
+    public static RemoteCall<CertificateRegistry> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(CertificateRegistry.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    }
+
+    @Deprecated
+    public static RemoteCall<CertificateRegistry> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
+        return deployRemoteCall(CertificateRegistry.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+    }
+
+    public static class CertificateIssuedEventResponse extends BaseEventResponse {
+        public byte[] certificateId;
+
+        public String ipfsHash;
+    }
+
+    public static class CertificateRevokedEventResponse extends BaseEventResponse {
+        public byte[] certificateId;
+    }
+}
