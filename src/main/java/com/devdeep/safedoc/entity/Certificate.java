@@ -2,6 +2,7 @@ package com.devdeep.safedoc.entity;
 
 
 
+import com.devdeep.safedoc.dto.CertificateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,20 +27,20 @@ public class Certificate {
     @Column(unique = true, nullable = false, updatable = false)
     private String certificateId = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
+    
     private String recipientName;
 
-    @Column(nullable = false)
+    
     private String recipientEmail;
 
-    @Column(nullable = false)
+    
     private String courseName;
 
-    @Column(nullable = false)
+    
     private String issuingOrganization;
 
     @Column(nullable = false)
-    private String issuerWalletAddress; // Blockchain address of issuer
+    private String issuerWalletAddress = "0x0000000000000000000000000000000000000000"; // Default null address
 
     @Column(unique = true)
     private String ipfsHash; // CID of document stored in IPFS
@@ -65,6 +66,7 @@ public class Certificate {
 
     // Additional metadata (optional)
     //@Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String metadataJson; // Can store grades, scores, etc.
 
     // Version for optimistic locking
@@ -79,7 +81,43 @@ public class Certificate {
         PENDING,
         ISSUED,
         REVOKED,
-        EXPIRED
+        EXPIRED,
+        FAILED,
+        QUEUED
+    }
+
+    private CertificateStatus certificateStatus;
+
+    private Integer retryCount;
+
+    private Date queuedAt;
+
+    public Date getQueuedAt() {
+        return queuedAt;
+    }
+
+    public CertificateStatus getStatus() {
+        return status;
+    }
+
+    public CertificateStatus getCertificateStatus() {
+        return certificateStatus;
+    }
+
+    public void setCertificateStatus(CertificateStatus certificateStatus) {
+        this.certificateStatus = certificateStatus;
+    }
+
+    public void setQueuedAt(Date queuedAt) {
+        this.queuedAt = queuedAt;
+    }
+
+    public Integer getRetryCount() {
+        return retryCount;
+    }
+
+    public void setRetryCount(Integer retryCount) {
+        this.retryCount = retryCount;
     }
 
     public Long getId() {
@@ -154,9 +192,7 @@ public class Certificate {
         this.blockchainTransactionHash = blockchainTransactionHash;
     }
 
-    public CertificateStatus getStatus() {
-        return status;
-    }
+
 
     public void setStatus(CertificateStatus status) {
         this.status = status;

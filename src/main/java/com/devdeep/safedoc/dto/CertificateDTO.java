@@ -1,5 +1,6 @@
 package com.devdeep.safedoc.dto;
 
+import com.devdeep.safedoc.entity.Certificate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,6 +48,9 @@ public class CertificateDTO {
 
     private String metadataJson;
 
+    public void setStatus(Certificate.CertificateStatus certificateStatus) {
+    }
+
     /**
      * Enum to match entity's CertificateStatus.
      */
@@ -55,6 +59,26 @@ public class CertificateDTO {
         ISSUED,
         REVOKED,
         EXPIRED
+    }
+    private  CertificateStatus certificateStatus;
+    private boolean blockchainVerified;
+    
+    private boolean metadataMatch;
+
+    public boolean isMetadataMatch() {
+        return metadataMatch;
+    }
+
+    public void setMetadataMatch(boolean metadataMatch) {
+        this.metadataMatch = metadataMatch;
+    }
+
+    public boolean isBlockchainVerified() {
+        return blockchainVerified;
+    }
+
+    public void setBlockchainVerified(boolean blockchainVerified) {
+        this.blockchainVerified = blockchainVerified;
     }
 
     public Long getId() {
@@ -111,6 +135,14 @@ public class CertificateDTO {
 
     public void setIssuerWalletAddress(String issuerWalletAddress) {
         this.issuerWalletAddress = issuerWalletAddress;
+    }
+
+    public CertificateStatus getCertificateStatus() {
+        return certificateStatus;
+    }
+
+    public void setCertificateStatus(CertificateStatus certificateStatus) {
+        this.certificateStatus = certificateStatus;
     }
 
     public String getIpfsHash() {
